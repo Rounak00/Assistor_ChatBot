@@ -1,150 +1,123 @@
-import { IoCodeSlash } from "react-icons/io5";
-import { IoMdPlanet } from "react-icons/io";
-import { SiPython } from "react-icons/si";
+
 import { IoSend } from "react-icons/io5";
-import { TbMessageChatbotFilled } from "react-icons/tb";
+import { TbMessageChatbot } from "react-icons/tb";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import "./App.css";
-import { useState } from "react";
-const App = () => {
-  
-  const [message, setMessage] = useState("");
-  const [messages,setMessages]=useState([]);
-  const [responseScreen, setResponseScreen] = useState(false);
-  
+import { useState, useRef, useEffect } from "react";
 
-  const hitRequest=()=>{
-    if(message){
-        generateResponse(message);
-    }else{
-      alert("You must write something...")
+const App = () => {
+  const [message, setMessage] = useState("");
+  const [messages, setMessages] = useState([]);
+  const [responseScreen, setResponseScreen] = useState(false);
+
+  const scroller = useRef(null);
+
+  // Scroll to the bottom when a new message is added
+  useEffect(() => {
+    scroller.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "end",
+      inline: "nearest",
+    });
+  }, [messages]);
+
+  const hitRequest = () => {
+    if (message) {
+      generateResponse(message);
+    } else {
+      alert("You must write something...");
     }
-  }
-  // const generateResponse=async()=>{
-    
-  //   const genAI = new GoogleGenerativeAI("AIzaSyCYraMYbvS1SQ-WtmuP0liRCyQp0Az-T60");
-  //   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-  //   const result = await model.generateContent(message);
-  //   allMessages.push(
-  //     {
-  //       type:"userMsg",
-  //       text:message,
-  //     },
-  //     {
-  //       type:"responseMsg",
-  //       text:result.response.text(),
-  //     }
-  //   )
-  //   setMessages(allMessages);
-  //   setResponseScreen(true);
-  //   setMessage("")
-  // }
+  };
+
   const generateResponse = async (msg) => {
     if (!msg) return;
-    
+
     const genAI = new GoogleGenerativeAI(import.meta.env.VITE_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     const result = await model.generateContent(msg);
-    
+
     const newMessages = [
       ...messages,
       { type: "userMsg", text: msg },
       { type: "responseMsg", text: result.response.text() },
     ];
-    
-    setMessages(newMessages); // Append new messages to the existing ones
+
+    setMessages(newMessages);
     setResponseScreen(true);
     setMessage(""); // Clear the input field after sending the message
-    
   };
 
   const newChat = () => {
     setResponseScreen(false);
     setMessages([]); // Clear the messages array
-  }
-  
+  };
+
   return (
     <>
-      <div className="container w-screen min-h-screen overflow-x-hidden bg-[#0E0E0E] text-white">
+      <div className="container w-full min-h-screen overflow-x-hidden bg-[#0E0E0E] text-white flex flex-col">
         {responseScreen ? (
-          <div className="h-[80vh] ">
+          <div className="h-[80vh] flex flex-col">
             <div className="header flex pt-[25px] items-center justify-between w-[100vw] px-[300px]">
               <h2 className="text-2xl">Assistor</h2>
-              <button className="bg-[#181818] p-[10px] rounded-[30px] cursor-pointer text-[14px] px-[20px]" id='newChatButton' onClick={newChat}>New Chat</button>
+              <button
+                className="bg-[#181818] p-[10px] rounded-[30px] cursor-pointer text-[14px] px-[20px]"
+                id="newChatButton"
+                onClick={newChat}
+              >
+                New Chat
+              </button>
             </div>
-            <div className="messages">
-              {messages?.map((msg,index)=>{
-                return (
-                  <div className={msg.type} key={index} >{msg.text}</div>
-                )
-              })}
-              {/* <div className="userMsg"> Hey rounak this side</div>
-              <div className="responseMsg"> Hey rounak, this is response</div> */}
+
+            {/* Message scrolling container */}
+            <div className="messages flex-grow overflow-y-auto max-h-[calc(80vh-80px)] px-[300px] py-[20px]">
+              {messages?.map((msg, index) => (
+                <div className={msg.type} key={index}>
+                  {msg.text}
+                </div>
+              ))}
+              {/* Invisible div to scroll into view */}
+              <div ref={scroller} />
             </div>
           </div>
         ) : (
-          <div className="middle h-[80vh] flex flex-col justify-center items-center ">
+          <div className="middle h-[80vh] flex flex-col justify-center items-center">
             <h1 className="text-4xl font-medium">Assistor</h1>
             <div className="boxes mt-[30px] flex items-center gap-2">
-              <div className="card w-[15vw] rounded-lg cursor-pointer transition-all hover:bg-[#201f1f] px-[20px] relative min-h-[20vh] bg-[#181818] p-[10px]  break-words ">
-                <p className="text-[18px] ">
-                  What is coding? How we can learn it.
+              <div className="bg-[#2b2929] max-h-[200px] max-w-[300px] rounded-sm flex flex-col justify-center items-center">
+                <p className=" text-white break-words p-3 py-4 text-xl">
+                    Welcome User, <br/>Write your question and I will answer.
                 </p>
-                <i className="absolute right-3 bottom-3 text-[18px]">
-                  <IoCodeSlash />
-                </i>
-              </div>
-              <div className="card w-[15vw] rounded-lg cursor-pointer transition-all hover:bg-[#201f1f] px-[20px] relative min-h-[20vh] bg-[#181818] p-[10px] break-words ">
-                <p className="text-[18px] ">
-                  Which is the red planet of solar system?
-                </p>
-                <i className="absolute right-3 bottom-3 text-[18px]">
-                  <IoMdPlanet />
-                </i>
-              </div>
-              <div className="card w-[15vw] rounded-lg cursor-pointer transition-all hover:bg-[#201f1f] px-[20px] relative min-h-[20vh] bg-[#181818] p-[10px] break-words ">
-                <p className="text-[18px] ">
-                  In which year Pyhton was developed?
-                </p>
-                <i className="absolute right-3 bottom-3 text-[18px]">
-                  <SiPython />
-                </i>
-              </div>
-              <div className="card w-[15vw] rounded-lg cursor-pointer transition-all hover:bg-[#201f1f] px-[20px] relative min-h-[20vh] bg-[#181818] p-[10px] break-all " 
-              onClick={()=>{
-                setMessage("How we can use AI as a chat bot?")
-                hitRequest();
-              }}>
-                <p className="text-[18px] ">How we can use AI as a chat bot?</p>
-                <i className="absolute right-3 bottom-3 text-[18px]">
-                  <TbMessageChatbotFilled />
-                </i>
+                <i className="text-2xl pb-6"><TbMessageChatbot/></i>
               </div>
             </div>
           </div>
         )}
 
+        {/* Input Box */}
         <div className="bottom w-full flex flex-col items-center">
-          <div className="inputBox w-[60%] text-[15px] py-[7px] flex items-center bg-[#181818] rounded-[30px]">
+          <div className="inputBox w-[60%] max-sm:w-[90%] text-[15px] py-[7px] flex items-center bg-[#181818] rounded-[30px]">
             <input
-              value={message }
+              value={message}
               type="text"
-              className="p-[10px] pl-[15px]  bg-transparent flex-1 outline-none border-none"
+              className="p-[10px] pl-[15px] bg-transparent flex-1 outline-none border-none "
               placeholder="Write your message here ..."
               id="messageBox"
               onChange={(e) => setMessage(e.target.value)}
             />
-            {message == "" ? (
+            {message === "" ? (
               ""
             ) : (
-              <i className="text-gray-400 text-[20px] mr-5 cursor-pointer" onClick={hitRequest}>
+              <i
+                className="text-gray-400 text-[20px] mr-5 cursor-pointer "
+                onClick={hitRequest}
+              >
                 <IoSend />
               </i>
             )}
           </div>
           <p className="text-[gray] text-[14px] my-4">
             Assistor is developed by Rounak. This chatbot uses Google Gemini API
-            for give responses
+            for giving responses.
           </p>
         </div>
       </div>
