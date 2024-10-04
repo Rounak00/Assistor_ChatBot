@@ -21,6 +21,17 @@ const App = () => {
     });
   }, [messages]);
 
+  const onKeyPressHandler=(e)=>{
+    
+    if(e.key==="Enter"){
+      if(message){
+        generateResponse(message);
+      }else{
+        alert("You must write something...");
+      }
+      
+    }
+  }
   const hitRequest = () => {
     if (message) {
       generateResponse(message);
@@ -103,6 +114,7 @@ const App = () => {
               placeholder="Write your message here ..."
               id="messageBox"
               onChange={(e) => setMessage(e.target.value)}
+              onKeyDown={(e)=>onKeyPressHandler(e)}
             />
             {message === "" ? (
               ""
