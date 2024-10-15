@@ -1,14 +1,16 @@
-
+// text-gray-400
 import { IoSend } from "react-icons/io5";
 import { TbMessageChatbot } from "react-icons/tb";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import "./App.css";
 import { useState, useRef, useEffect } from "react";
+import { PuffLoader } from "react-spinners";
 
 const App = () => {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [responseScreen, setResponseScreen] = useState(false);
+  const [loader,setLoader]=useState(false);
 
   const scroller = useRef(null);
 
@@ -41,6 +43,9 @@ const App = () => {
   };
 
   const generateResponse = async (msg) => {
+   
+    setMessage(""); // Clear the input field after sending the message
+    setLoader(true);
     if (!msg) return;
 
     const genAI = new GoogleGenerativeAI(import.meta.env.VITE_API_KEY);
@@ -52,10 +57,11 @@ const App = () => {
       { type: "userMsg", text: msg },
       { type: "responseMsg", text: result.response.text() },
     ];
-
+    
+    setLoader(false);
     setMessages(newMessages);
     setResponseScreen(true);
-    setMessage(""); // Clear the input field after sending the message
+    
   };
 
   const newChat = () => {
@@ -71,7 +77,7 @@ const App = () => {
             <div className="header flex pt-[25px] items-center justify-between w-[100vw] px-[300px]">
               <h2 className="text-2xl">Assistor</h2>
               <button
-                className="bg-[#181818] p-[10px] rounded-[30px] cursor-pointer text-[14px] px-[20px]"
+                className="bg-[#181818] p-[10px] rounded-[30px] cursor-pointer text-[14px] px-[20px] "
                 id="newChatButton"
                 onClick={newChat}
               >
@@ -126,6 +132,11 @@ const App = () => {
                 <IoSend />
               </i>
             )}
+            {loader === true ? (
+              <i  className="text-gray-400 text-[10px] mr-5 cursor-pointer ">
+                <PuffLoader color="white" size="30"/>
+              </i>
+            ):("")}
           </div>
           <p className="text-[gray] text-[14px] my-4">
             Assistor is developed by Rounak. This chatbot uses Google Gemini API
@@ -134,6 +145,13 @@ const App = () => {
         </div>
       </div>
     </>
+    
+    // <>
+    // {loader === true? <PuffLoader className="text-gray-400" />: <h1>Hello</h1> }
+    
+    
+    // </>
+    
   );
 };
 
