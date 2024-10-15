@@ -41,6 +41,7 @@ const App = () => {
   };
 
   const generateResponse = async (msg) => {
+    
     if (!msg) return;
 
     const genAI = new GoogleGenerativeAI(import.meta.env.VITE_API_KEY);
