@@ -9,4 +9,9 @@ Currently, two official plugins are available:
 
 <h3>Some screen shots of the project</h3>
 <br/><br/>
-<img src="ScreenShot1"/>
+ <table>
+  <tr>
+    <td>Auth Page<img src="./public/ScreenShot1.png" alt="AuthPage" /> </td>
+    <td>Profile Setup Page<img src="./public/ScreenShot2.png" alt="ProfileSetupPage" /></td>
+  </tr>
+ </table>
