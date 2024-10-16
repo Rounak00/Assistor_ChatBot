@@ -11,7 +11,7 @@ Currently, two official plugins are available:
 <br/><br/>
  <table>
   <tr>
-    <td>Auth Page<img src="./ScreenShot1.png" alt="Scren shot 1" /> </td>
-    <td>Profile Setup Page<img src="./ScreenShot2.png" alt="Scrren shot 2" /></td>
+    <td>Auth Page<img src="./public/ScreenShot1.png" alt="Scren shot 1" /> </td>
+    <td>Profile Setup Page<img src="./public/ScreenShot2.png" alt="Scrren shot 2" /></td>
   </tr>
  </table>
