@@ -72,7 +72,7 @@ const App = () => {
 
   return (
     <>
-      <div className="container w-[100vw] min-h-screen overflow-x-hidden bg-[#0E0E0E] text-white flex flex-col">
+      <div className=" w-[100vw] min-h-screen overflow-x-hidden bg-[#0E0E0E] text-white flex flex-col">
         {responseScreen ? (
           <div className="h-[80vh] flex flex-col w-[100vw]">
             <div className="header flex pt-[25px] items-center justify-between w-[100vw] px-[10px] md:px-[200px]">
